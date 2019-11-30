@@ -369,10 +369,13 @@ public final class DotGenerator {
 	 * @throws CouldNotLoadRecordingException
 	 */
 	public static void main(String[] args) throws IOException, CouldNotLoadRecordingException {
-		IItemCollection items = JfrLoaderToolkit.loadEvents(new File(args[0]));
+		File jfrFile = new File(args[0]);
+		IItemCollection items = JfrLoaderToolkit.loadEvents(jfrFile);
 		IItemCollection filteredItems = items.apply(JdkFilters.EXECUTION_SAMPLE);
 		FrameSeparator frameSeparator = new FrameSeparator(FrameCategorization.METHOD, false);
 		StacktraceGraphModel model = new StacktraceGraphModel(frameSeparator, filteredItems, null);
-		System.out.println(toDot(model, getDefaultConfiguration()));
+		Map<ConfigurationKey, String> configuration = getDefaultConfiguration();
+		configuration.put(ConfigurationKey.Name, jfrFile.getName());
+		System.out.println(toDot(model, configuration));
 	}
 }
