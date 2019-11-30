@@ -88,7 +88,7 @@ public class Node {
 			if (other.frame != null)
 				return false;
 		}
-		return true;
+		return frame.equals(other.frame);
 	}
 
 	public Integer getNodeId() {
