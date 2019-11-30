@@ -220,6 +220,8 @@ public final class DotGenerator {
 		StringBuilder builder = new StringBuilder(2048);
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
 		builder.append(String.format("digraph \"%s\" {\n", graphName));
+
+		createTitleNode(builder, configuration);
 		createSubgraphNode(builder, graphName, configuration, model);
 
 		// Convert Nodes
@@ -234,6 +236,14 @@ public final class DotGenerator {
 		return builder.toString();
 	}
 
+	private static void createTitleNode(StringBuilder builder, Map<ConfigurationKey, String> configuration) {
+		builder.append("node [style=");
+		builder.append(getConf(configuration, ConfigurationKey.Style, DEFAULT_STYLE));
+		builder.append(" fillcolor=\"");
+		builder.append(getConf(configuration, ConfigurationKey.Fillcolor, DEFAULT_FILL_COLOR));
+		builder.append("\"]\n");
+	}
+
 	private static void emitEdge(
 		StringBuilder builder, StacktraceGraphModel model, EdgeConfigurator edgeConfigurator, Edge edge) {
 		builder.append("N");
@@ -246,9 +256,10 @@ public final class DotGenerator {
 		} else {
 			builder.append(edge.value);
 		}
+		builder.append("\"");
 		int weight = edgeConfigurator.getWeight(edge);
 		if (weight >= 2) {
-			builder.append("\" weight=");
+			builder.append(" weight=");
 			builder.append(weight);
 		}
 		builder.append(edgeConfigurator.isMax(edge) ? " penwidth=2 " : " ");
@@ -275,17 +286,17 @@ public final class DotGenerator {
 		builder.append(node.getCount());
 		builder.append(" (");
 		builder.append(percentOfSamples);
-		builder.append(" %) id=\"node");
+		builder.append(" %)\" id=\"node");
 		builder.append(node.getNodeId());
-		builder.append("\" fontsize=\"");
+		builder.append("\" fontsize=");
 		builder.append(configurator.getFontSize(node));
-		builder.append("\" shape=");
+		builder.append(" shape=");
 		builder.append(configurator.shape);
-		builder.append("\" tooltip=\"");
+		builder.append(" tooltip=\"");
 		builder.append(node.getFrame().getHumanReadableSeparatorSensitiveString());
 		builder.append(" (");
 		builder.append(percentOfSamples);
-		builder.append(" %) color=\"");
+		builder.append(" %)\" color=\"");
 		builder.append(configurator.color);
 		builder.append("\" fillcolor=\"");
 		builder.append(configurator.fillColor);
@@ -298,8 +309,7 @@ public final class DotGenerator {
 		builder.append("subgraph cluster_L { ");
 		builder.append("\"");
 		builder.append(graphName);
-		builder.append(" ");
-		builder.append("[shape=");
+		builder.append("\" [shape=");
 		builder.append(getConf(configuration, ConfigurationKey.TitleShape, DEFAULT_SHAPE));
 		builder.append(" fontsize=");
 		builder.append(getConf(configuration, ConfigurationKey.TitleFontSize, DEFAULT_TITLE_FONT_SIZE));

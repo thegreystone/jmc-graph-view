@@ -156,7 +156,7 @@ public class StacktraceGraphModel {
 		}
 		return minCount;
 	}
-	
+
 	/**
 	 * Searches the nodes for the max count.
 	 * 
@@ -182,7 +182,7 @@ public class StacktraceGraphModel {
 		}
 		return minWeight;
 	}
-	
+
 	/**
 	 * Searches the nodes for the max weight.
 	 * 
@@ -279,11 +279,11 @@ public class StacktraceGraphModel {
 		n.count++;
 		n.weight += value;
 
-		// Next go through all frames and up the cumulative counts
-		for (int i = 0; i < frames.size() - 1; i++) {
+		// Next go through all frames from the thread root, and up the cumulative counts
+		for (int i = frames.size() - 1; i > 0; i--) {
 			// Process two frames sliding window, from and to
 			IMCFrame currentFrame = frames.get(i);
-			IMCFrame nextFrame = frames.get(i + 1);
+			IMCFrame nextFrame = frames.get(i - 1);
 
 			Node currentNode = getOrCreateNode(currentFrame);
 			Node nextNode = getOrCreateNode(nextFrame);

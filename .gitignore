@@ -7,8 +7,15 @@
 # BlueJ files
 *.ctxt
 
+# Mac
+.DS_store
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+
+# Binary folders
+target/
+bin/
 
 # Package Files #
 *.jar
