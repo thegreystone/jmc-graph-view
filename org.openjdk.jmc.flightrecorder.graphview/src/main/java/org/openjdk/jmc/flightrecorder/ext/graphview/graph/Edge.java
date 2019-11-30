@@ -67,4 +67,9 @@ public class Edge {
 		}
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return getFrom().toString() + " -> " + getTo().toString() + ", count = " + count;
+	}
 }

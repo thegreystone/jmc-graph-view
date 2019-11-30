@@ -73,9 +73,6 @@ public final class AggregatableFrame implements IMCFrame {
 		if (getClass() != obj.getClass())
 			return false;
 		AggregatableFrame other = (AggregatableFrame) obj;
-		if (!frame.equals(other.frame)) {
-			return false;
-		}
 		return !separator.isSeparate(this.frame, other.frame);
 	}
 	

@@ -92,7 +92,6 @@ public final class DotGenerator {
 		 * The min edge weight to use for the least traveled path.
 		 */
 		MinEdgeWeight
-
 	}
 
 	private final static class NodeConfigurator {
