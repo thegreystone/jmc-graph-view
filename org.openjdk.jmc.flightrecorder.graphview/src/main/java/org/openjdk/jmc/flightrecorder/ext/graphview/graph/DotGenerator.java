@@ -17,15 +17,17 @@ import org.openjdk.jmc.flightrecorder.stacktrace.FrameSeparator.FrameCategorizat
  * by d3-graphviz, to visualize the graphs.
  */
 public final class DotGenerator {
-	private static final String DEFAULT_EDGE_STYLE = "dotted";
-	private static final String DEFAULT_MIN_EDGE_WEIGHT = "1";
-	private static final String DEFAULT_MAX_EDGE_WEIGHT = "40";
-	private static final String DEFAULT_NODE_SIZE_ATTRIBUTE = "count";
 	private static final String DEFAULT_NAME = "Unnamed";
 	private static final String DEFAULT_SHAPE = "box";
 	private static final String DEFAULT_STYLE = "filled";
 	private static final String DEFAULT_FILL_COLOR = "#f8f8f8";
 	private static final String DEFAULT_TITLE_FONT_SIZE = "16";
+	private static final String DEFAULT_FONT_NAME = "helvetica";
+	private static final String DEFAULT_NODE_FILL_COLOR = "#e1e1e1";
+	private static final String DEFAULT_EDGE_STYLE = "solid";
+	private static final String DEFAULT_MIN_EDGE_WEIGHT = "2";
+	private static final String DEFAULT_MAX_EDGE_WEIGHT = "40";
+	private static final String DEFAULT_NODE_SIZE_ATTRIBUTE = "count";
 	private static final String DEFAULT_MIN_NODE_FONT_SIZE = "8";
 	private static final String DEFAULT_MAX_NODE_FONT_SIZE = "32";
 
@@ -42,6 +44,10 @@ public final class DotGenerator {
 		 * The fill color, e.g. #f8f8f8.
 		 */
 		Fillcolor,
+		/**
+		 * The name of the font to use, e.g. helvetica, or helvetica:italics.
+		 */
+		Fontname,
 		/**
 		 * Font size of the title area, e.g. 16. Need to be parseable to a number.
 		 */
@@ -81,7 +87,7 @@ public final class DotGenerator {
 		 */
 		EdgeWeightAttribute,
 		/**
-		 * The style for the edges, e.g. dotted.
+		 * The style for the edges. [solid|dotted|dashed|bold]
 		 */
 		EdgeStyle,
 		/**
@@ -209,7 +215,6 @@ public final class DotGenerator {
 			color = color | (colorval << 8) | colorval;
 			return "#" + Integer.toHexString(color);
 		}
-
 	}
 
 	/**
@@ -220,7 +225,7 @@ public final class DotGenerator {
 		String graphName = getConf(configuration, ConfigurationKey.Name, DEFAULT_NAME);
 		builder.append(String.format("digraph \"%s\" {\n", graphName));
 
-		createTitleNode(builder, configuration);
+		createDefaultNodeSettingsEntry(builder, configuration);
 		createSubgraphNode(builder, graphName, configuration, model);
 
 		// Convert Nodes
@@ -235,11 +240,14 @@ public final class DotGenerator {
 		return builder.toString();
 	}
 
-	private static void createTitleNode(StringBuilder builder, Map<ConfigurationKey, String> configuration) {
+	private static void createDefaultNodeSettingsEntry(
+		StringBuilder builder, Map<ConfigurationKey, String> configuration) {
 		builder.append("node [style=");
 		builder.append(getConf(configuration, ConfigurationKey.Style, DEFAULT_STYLE));
 		builder.append(" fillcolor=\"");
 		builder.append(getConf(configuration, ConfigurationKey.Fillcolor, DEFAULT_FILL_COLOR));
+		builder.append("\" fontname=\"");
+		builder.append(getConf(configuration, ConfigurationKey.Fontname, DEFAULT_FONT_NAME));
 		builder.append("\"]\n");
 	}
 
@@ -276,7 +284,7 @@ public final class DotGenerator {
 
 	private static void emitNode(
 		StringBuilder builder, StacktraceGraphModel model, NodeConfigurator configurator, Node node) {
-		double percentOfSamples = node.getCount() * 100.0 / model.getTotalTraceCount();
+		String percentOfSamples = String.format("%.3f %%", node.getCount() * 100.0 / model.getTotalTraceCount());
 		builder.append("N");
 		builder.append(node.getNodeId());
 		builder.append(" [label=\"");
@@ -285,7 +293,7 @@ public final class DotGenerator {
 		builder.append(node.getCount());
 		builder.append(" (");
 		builder.append(percentOfSamples);
-		builder.append(" %)\" id=\"node");
+		builder.append(")\" id=\"node");
 		builder.append(node.getNodeId());
 		builder.append("\" fontsize=");
 		builder.append(configurator.getFontSize(node));
@@ -332,6 +340,7 @@ public final class DotGenerator {
 		Map<ConfigurationKey, String> configuration = new HashMap<>();
 		configuration.put(ConfigurationKey.Name, DEFAULT_NAME);
 		configuration.put(ConfigurationKey.Fillcolor, DEFAULT_FILL_COLOR);
+		configuration.put(ConfigurationKey.NodeFillColor, DEFAULT_NODE_FILL_COLOR);
 		configuration.put(ConfigurationKey.Style, DEFAULT_STYLE);
 		configuration.put(ConfigurationKey.TitleShape, DEFAULT_SHAPE);
 		configuration.put(ConfigurationKey.TitleFontSize, DEFAULT_TITLE_FONT_SIZE);
@@ -342,6 +351,7 @@ public final class DotGenerator {
 		configuration.put(ConfigurationKey.MaxEdgeWeight, DEFAULT_MAX_EDGE_WEIGHT);
 		configuration.put(ConfigurationKey.MinEdgeWeight, DEFAULT_MIN_EDGE_WEIGHT);
 		configuration.put(ConfigurationKey.EdgeStyle, DEFAULT_EDGE_STYLE);
+		configuration.put(ConfigurationKey.Fontname, DEFAULT_FONT_NAME);
 		return configuration;
 	}
 

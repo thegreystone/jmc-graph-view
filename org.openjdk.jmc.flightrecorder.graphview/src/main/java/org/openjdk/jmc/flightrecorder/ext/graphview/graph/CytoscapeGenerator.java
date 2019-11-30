@@ -8,7 +8,7 @@ package org.openjdk.jmc.flightrecorder.ext.graphview.graph;
 public final class CytoscapeGenerator {
 	
 	/**
-	 * Renders a {@link StacktraceGraphModel} in DOT format.
+	 * Renders a {@link StacktraceGraphModel} in Cytoscape format.
 	 */
 	public static String toCytoScapeJSon(StacktraceGraphModel model) {
 		StringBuilder builder = new StringBuilder(2048);
