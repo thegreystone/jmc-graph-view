@@ -322,13 +322,13 @@ public final class DotGenerator {
 		builder.append(getConf(configuration, ConfigurationKey.TitleFontSize, DEFAULT_TITLE_FONT_SIZE));
 		builder.append(" label=\"");
 		builder.append(graphName);
-		builder.append("\\lTypes: ");
+		builder.append("\\nTypes: ");
 		builder.append(GraphModelUtils.getTypeNames(model.getItems()));
 		builder.append("\\lTotal samples = ");
 		builder.append(model.getTotalTraceCount());
 		builder.append("\\lTotal edge count = ");
 		builder.append(model.getTotalEdgeCount());
-		builder.append("\" tooltip=\"");
+		builder.append("\\l\" tooltip=\"");
 		builder.append(graphName);
 		builder.append("\"] }\n");
 	}
